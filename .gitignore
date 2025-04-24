@@ -2,6 +2,9 @@
 __pycache__/
 *.pyc
 
+# Python virtual environment
+venv/
+
 # Data files
 data/*.csv
 data/*.parquet
