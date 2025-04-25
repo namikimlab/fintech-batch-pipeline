@@ -2,9 +2,6 @@
 faker
 pandas
 
-# Airflow 
-apache-airflow==2.8.1  # use this older version for stability 
-
 # AWS SDK
 boto3
 
