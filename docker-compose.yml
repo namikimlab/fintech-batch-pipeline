@@ -30,19 +30,27 @@ services:
                airflow webserver"
 
   spark-master:
-    image: bitnami/spark:latest
+    build: ./spark  # Dockerfile 
     environment:
       - SPARK_MODE=master
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}  
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - ./scripts:/opt/airflow/scripts # share scripts folder
     ports:
       - "8081:8080"
 
   spark-worker:
-    image: bitnami/spark:latest
+    build: ./spark  # Dockerfile 
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     depends_on:
       - spark-master
+    volumes:
+      - ./scripts:/opt/airflow/scripts # share scripts folder
 
 volumes:
   postgres_data:
