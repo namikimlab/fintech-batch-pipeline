@@ -2,6 +2,7 @@ from faker import Faker
 import pandas as pd
 import random
 import uuid
+import os
 
 fake = Faker('ko_KR')
 
@@ -25,6 +26,7 @@ n = 10000  # number of transactions for testing
 data = [generate_transaction() for _ in range(n)]
 
 df = pd.DataFrame(data)
-df.to_csv('card_transactions.csv', index=False, encoding='utf-8-sig')
+os.makedirs('/opt/airflow/data', exist_ok=True)
+df.to_csv('/opt/airflow/data/card_transactions.csv', index=False, encoding='utf-8-sig')
 
 print(f"{n}건의 거래 데이터를 생성했습니다")
