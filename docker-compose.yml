@@ -10,24 +10,45 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  airflow:
-    image: apache/airflow:2.8.1
+  airflow-webserver:
+    build: 
+      context: .
+      dockerfile: Dockerfile.airflow  
     depends_on:
       - postgres
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__FERNET_KEY: ''
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     volumes:
       - ./dags:/opt/airflow/dags
       - ./airflow:/opt/airflow
+      - ./scripts:/opt/airflow/scripts
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8080:8080"
     command: >
       bash -c "airflow db upgrade &&
                airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
                airflow webserver"
+
+  airflow-scheduler:
+    build: 
+      context: .
+      dockerfile: Dockerfile.airflow
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./airflow:/opt/airflow
+      - ./scripts:/opt/airflow/scripts
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: >
+      bash -c "airflow scheduler"
 
   spark-master:
     build: ./spark  # Dockerfile 
@@ -38,7 +59,8 @@ services:
     volumes:
       - ./scripts:/opt/airflow/scripts # share scripts folder
     ports:
-      - "8081:8080"
+      - "8081:8080"   # Spark Master UI
+      - "4040:4040"   # Spark Application UI
 
   spark-worker:
     build: ./spark  # Dockerfile 
@@ -51,6 +73,8 @@ services:
       - spark-master
     volumes:
       - ./scripts:/opt/airflow/scripts # share scripts folder
+    ports:
+      - "4041:4040"   # Spark Application UI  
 
 volumes:
   postgres_data:
