@@ -120,3 +120,7 @@ docker compose up --build -d
 ### Documentation & Testing
 - Add end-to-end tests for pipeline integrity.
 - Improve code documentation and maintainability.
+
+---
+Made with 🧡 by Nami Kim
+[Blog](https://namixkim.com) | [GitHub](https://github.com/namikimlab) | [LinkedIn](https://linkedin.com/in/namixkim)
