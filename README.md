@@ -1,3 +1,5 @@
+[🇺🇸 English](./README.md) | [🇰🇷 한국어](./README.ko.md)
+
 # Fintech Batch Data Pipeline
 
 ## Overview
@@ -10,8 +12,6 @@ This project implements a complete **batch data pipeline** using **Apache Airflo
 - **Airflow Automation**: Orchestrates the entire pipeline using **Apache Airflow**, including task scheduling.
 - **Infrastructure as Code (IaC)**: Uses Terraform to provision the necessary cloud resources, such as S3 buckets and Athena. 
 - **Athena Integration**: Stores processed data in **Parquet** format on S3 and queries it using **AWS Athena**.
-
-
 
 ## Project Structure
 
